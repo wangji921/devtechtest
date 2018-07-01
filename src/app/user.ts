@@ -3,3 +3,10 @@ export interface User {
   Id: number;
   ProviderEmail: string;
 }
+
+// dev
+// export interface User {
+//   name: string;
+//   id: number;
+//   email: string;
+// }

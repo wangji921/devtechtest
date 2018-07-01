@@ -4,11 +4,15 @@
 <!-- <button class="btn btn-primary" (click)='getUsers()'>List all users</button> -->
 <p>Select a user to list the appointments</p>
 <div class="container row">
-  <div class="user-list" *ngFor='let user of users | async'>
+  <div class="user-list">
+    <button class="btn btn-primary" type="button">All Users</button>
+    <ng-container *ngFor='let user of users | async'>
+        <button class="btn btn-secondary" type="button" (click)="getAppointmentsByUser(user.Id)">
+          {{ user.Name }} ( ID: {{ user.Id }} )
+        </button>
+    </ng-container>
     <!-- {{ user | json }} -->
-    <button class="btn btn-primary" type="button" (click)="getAppointmentsByUser(user.Id)">
-      {{ user.Name }} ( ID: {{ user.Id }} )
-    </button>
+
   </div>
 </div>
 
@@ -19,6 +23,8 @@
       <th scope="col">Description</th>
       <th scope="col">Start</th>
       <th scope="col">End</th>
+      <th scope="col">User</th>
+      <th scope="col">Notes</th>
     </tr>
   </thead>
   <tbody>
@@ -28,6 +34,8 @@
         <td>{{ appointment.Description }}</td>
         <td>{{ appointment.Start | date:'medium'}}</td>
         <td>{{ appointment.End | date:'medium'}}</td>
+        <td>{{ appointment.Party }}</td>
+        <td>{{ appointment.Notes }}</td>
       </tr>
     </ng-container>
     <!-- <ng-container *ngIf='count>-1'>

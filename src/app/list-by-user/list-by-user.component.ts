@@ -28,6 +28,10 @@ export class ListByUserComponent implements OnInit {
     this.users = this.http.get<User[]>(this.apiUser);
   }
 
+  showAll() {
+
+  }
+
   getAppointmentsByUser(userId) {
     this.selectedUser = userId;
     this.count = -1;

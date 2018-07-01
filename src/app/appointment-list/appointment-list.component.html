@@ -1,0 +1,37 @@
+<h2>Appointment List</h2>
+
+<!-- user filter -->
+<button class="btn btn-primary btn-sm" type="button" (click)='filterByUserID(-1)'>All Users</button>
+<ng-container *ngFor='let user of users | async'>
+  <button class="btn btn-secondary btn-sm" type="button" (click)='filterByUserID(user.Id)'>
+    {{ user.Name }} ( ID: {{ user.Id }} )
+  </button>
+</ng-container>
+
+<!-- appointment list -->
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Description</th>
+      <th scope="col">Start</th>
+      <th scope="col">End</th>
+      <th scope="col">User</th>
+      <th scope="col">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor='let appointment of filteredAppointments | async | orderByUserId:userID'>
+      <td>{{ appointment.Id }}</td>
+      <td>{{ appointment.Description }}</td>
+      <td>{{ appointment.Start | date:'MMM d, y, h:mm a'}}</td>
+      <td>{{ appointment.End | date:'MMM d, y, h:mm a'}}</td>
+      <td>{{ appointment.Party }}</td>
+      <td>{{ appointment.Notes }}</td>
+    </tr>
+    <!-- <tr *ngIf='((allAppointments | async) !== null) ? ((allAppointments | async).length === 0) : false'>
+      <td colspan="4">No Appointment Found.</td>
+    </tr> -->
+  </tbody>
+</table>
+
