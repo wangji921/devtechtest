@@ -1,3 +1,39 @@
-<p>
-  list-by-user works!
-</p>
+<h3>
+  List appointments for a selected user
+</h3>
+<!-- <button class="btn btn-primary" (click)='getUsers()'>List all users</button> -->
+<p>Select a user to list the appointments</p>
+<div class="container row">
+  <div class="user-list" *ngFor='let user of users | async'>
+    <!-- {{ user | json }} -->
+    <button class="btn btn-primary" type="button" (click)="getAppointmentsByUser(user.Id)">
+      {{ user.Name }} ( ID: {{ user.Id }} )
+    </button>
+  </div>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Description</th>
+      <th scope="col">Start</th>
+      <th scope="col">End</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor='let appointment of userAppointments | async' >
+      <tr *ngIf='checkUserExistInAppointment(appointment.Party, selectedUser)'>
+        <td>{{ appointment.Id }}</td>
+        <td>{{ appointment.Description }}</td>
+        <td>{{ appointment.Start | date:'medium'}}</td>
+        <td>{{ appointment.End | date:'medium'}}</td>
+      </tr>
+    </ng-container>
+    <!-- <ng-container *ngIf='count>-1'>
+      <tr>
+        <td colspan="4">No Appointment Found.</td>
+      </tr>
+    </ng-container> -->
+  </tbody>
+</table>
