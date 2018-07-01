@@ -1,11 +1,11 @@
-button {
+button, span {
   margin-right: 10px;
   margin-bottom: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
-table {
-  margin-top: 20px;
+span {
+  cursor: pointer;
 }
 
 tr > td:nth-child(2) {

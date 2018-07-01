@@ -14,33 +14,47 @@ import { findIndex } from 'rxjs/operators';
 export class AppointmentListComponent implements OnInit {
   appointments: Observable<Appointment[]>;
   filteredAppointments: Observable<Appointment[]>;
+  fetchedUsers: Observable<User[]>;
   mergeArray: any;
   editAppointment: Appointment;
   users: Observable<User[]>;
   userID = -1;
   startDate = new Date();
 
-  apiAppointment = 'http://devtechtest.previewourapp.com/api/Appointment?providerEmail=wangji921@gmail.com';
+  apiApps = 'http://devtechtest.previewourapp.com/api/Appointment?providerEmail=wangji921@gmail.com';
   apiUser = 'http://devtechtest.previewourapp.com/api/User?providerEmail=wangji921@gmail.com';
-  apiPut = 'http://devtechtest.previewourapp.com/api/Appointment/{id}?providerEmail=wangji921@gmail.com';
-  // apiAppointment = 'https://jsonplaceholder.typicode.com/posts';
-  // apiUser = 'https://jsonplaceholder.typicode.com/users';
+  apiApp = 'http://devtechtest.previewourapp.com/api/Appointment/{id}?providerEmail=wangji921@gmail.com';
+
+  devPost: any;
+  viewApp: Appointment;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.getAppointments();
     this.getUsers();
-    this.merge();
   }
 
   getAppointments() {
-    this.appointments = this.http.get<Appointment[]>(this.apiAppointment);
+    this.appointments = this.http.get<Appointment[]>(this.apiApps);
     this.filteredAppointments = this.appointments;
+  }
+
+  getApp(id: number) {
+    const apiUrl = this.apiApp.replace('{id}', id.toString());
+    this.devPost = this.http.get(apiUrl)
+      .subscribe(
+        (data: Appointment) => {
+          this.viewApp = data;
+          console.log(data);
+          console.log(this.viewApp);
+        }
+      );
   }
 
   getUsers() {
     this.users = this.http.get<User[]>(this.apiUser);
+    this.fetchedUsers = this.users;
   }
 
   merge() {
@@ -55,36 +69,13 @@ export class AppointmentListComponent implements OnInit {
     this.userID = userId;
   }
 
-  // FilterByUser(userId) {
-  //   this.filteredAppointments = this.filteredAppointments.pipe(
-  //     filter(appointment => {return appointment.includes(userId)})
-  //   )
-  // }
-
-  // newAppointment = new Appointment;
-  postAppointment() {
-    const req = this.http.post('http://jsonplaceholder.typicode.com/posts', {
-      title: 'foo',
-      body: 'bar',
-      userId: 1
-    })
-      .subscribe(
-        res => {
-          console.log(res);
-        },
-        err => {
-          console.log('Error occured');
-        }
-      );
-  }
-
   edit(appointment) {
     this.editAppointment = appointment;
   }
 
   update() {
     console.log(this.editAppointment.Id);
-    const apiUrl = this.apiPut.replace('{id}', this.editAppointment.Id.toString());
+    const apiUrl = this.apiApp.replace('{id}', this.editAppointment.Id.toString());
     if (this.editAppointment) {
       console.log(apiUrl);
       const req = this.http.put<Appointment>(apiUrl, this.editAppointment).subscribe(
@@ -99,7 +90,7 @@ export class AppointmentListComponent implements OnInit {
     }
   }
 
-  postAppointment3() {
+  postAppointment() {
     const req = this.http.post('http://devtechtest.previewourapp.com/api/Appointment?providerEmail=wangji921@gmail.com', {
       Description: 'Test Appointment 4',
       Start: this.startDate.setDate(this.startDate.getDate() - 5),
@@ -120,5 +111,4 @@ export class AppointmentListComponent implements OnInit {
         }
       );
   }
-
 }
