@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Appointment } from '../appointment';
 import { User } from '../user';
 import { Observable } from 'rxjs';
+import { findIndex } from 'rxjs/operators';
 
 @Component({
   selector: 'app-appointment-list',
@@ -13,13 +14,16 @@ import { Observable } from 'rxjs';
 export class AppointmentListComponent implements OnInit {
   appointments: Observable<Appointment[]>;
   filteredAppointments: Observable<Appointment[]>;
+  mergeArray: any;
+  editAppointment: Appointment;
   users: Observable<User[]>;
   userID = -1;
   startDate = new Date();
 
   apiAppointment = 'http://devtechtest.previewourapp.com/api/Appointment?providerEmail=wangji921@gmail.com';
-  // apiAppointment = 'https://jsonplaceholder.typicode.com/posts';
   apiUser = 'http://devtechtest.previewourapp.com/api/User?providerEmail=wangji921@gmail.com';
+  apiPut = 'http://devtechtest.previewourapp.com/api/Appointment/{id}?providerEmail=wangji921@gmail.com';
+  // apiAppointment = 'https://jsonplaceholder.typicode.com/posts';
   // apiUser = 'https://jsonplaceholder.typicode.com/users';
 
   constructor(private http: HttpClient) { }
@@ -27,6 +31,7 @@ export class AppointmentListComponent implements OnInit {
   ngOnInit() {
     this.getAppointments();
     this.getUsers();
+    this.merge();
   }
 
   getAppointments() {
@@ -36,6 +41,14 @@ export class AppointmentListComponent implements OnInit {
 
   getUsers() {
     this.users = this.http.get<User[]>(this.apiUser);
+  }
+
+  merge() {
+    console.log('not null');
+    if (this.appointments != null) {
+      console.log('not null');
+    }
+    console.log(this.mergeArray);
   }
 
   filterByUserID(userId) {
@@ -65,8 +78,25 @@ export class AppointmentListComponent implements OnInit {
       );
   }
 
-  update() {
+  edit(appointment) {
+    this.editAppointment = appointment;
+  }
 
+  update() {
+    console.log(this.editAppointment.Id);
+    const apiUrl = this.apiPut.replace('{id}', this.editAppointment.Id.toString());
+    if (this.editAppointment) {
+      console.log(apiUrl);
+      const req = this.http.put<Appointment>(apiUrl, this.editAppointment).subscribe(
+        res => {
+          console.log(res);
+        },
+        err => {
+          console.log('Error occured');
+        }
+      );
+      this.editAppointment = undefined;
+    }
   }
 
   postAppointment3() {
